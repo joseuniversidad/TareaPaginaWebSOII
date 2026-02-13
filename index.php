@@ -18,7 +18,7 @@
     <div class="box">
         <h1>Potencia y Seguridad en Servidores</h1>
         <p>Infraestructura confiable para un mundo conectado.</p>
-        <a href="login.php"><button class="btn">Explorar</button></a>
+        <a href="../views/login.php"><button class="btn">Explorar</button></a>
     </div>
 </div>
 
