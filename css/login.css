@@ -1,0 +1,154 @@
+ /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f4f6f9;
+            /* blanco gris suave */
+        }
+
+        /* ===== LADO IZQUIERDO (JUMBOTRON LOGIN) ===== */
+        .left {
+            width: 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        /* ===== JUMBOTRON ===== */
+        .jumbotron {
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            animation: fadeUp 0.8s ease;
+        }
+
+        .jumbotron h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #111;
+        }
+
+        .jumbotron p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* ===== INPUTS MÁS GRANDES Y NEUTROS ===== */
+        .input-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 18px 16px 45px;
+            /* más altos */
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            background: #f9fafb;
+            /* neutro suave */
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #cbd5e1;
+            /* gris elegante */
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ===== BOTON AZUL ===== */
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #1e90ff;
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #187bcd;
+            transform: translateY(-2px);
+        }
+
+        /* ===== LINKS CENTRADOS ===== */
+        .links {
+            margin-top: 25px;
+            text-align: center;
+            /* 👈 centrado */
+            font-size: 14px;
+        }
+
+        .links a {
+            display: block;
+            /* uno debajo del otro */
+            color: #1e90ff;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ===== LADO DERECHO (IMAGEN ORIGINAL) ===== */
+        .right {
+            width: 55%;
+            background-image: url('https://d1ih8jugeo2m5m.cloudfront.net/2023/01/como-funciona-un-servidor-web-ingeniero.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* ===== ANIMACION ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:900px) {
+            .right {
+                display: none;
+            }
+
+            .left {
+                width: 100%;
+            }
+        }

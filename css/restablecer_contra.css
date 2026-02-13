@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e9ecef; /* Color tipo jumbotron */
+}
+
+.container {
+  display: flex;
+  background: white;
+  width: 900px;
+  max-width: 95%;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.image-section {
+  width: 50%;
+  background: url("https://www.empresasmantenimientoinformatico.com/wp-content/uploads/soporte-inform%C3%A1tico-madrid.png")
+    no-repeat center center/cover;
+}
+
+.form-section {
+  width: 50%;
+  padding: 40px;
+}
+
+.form-section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #343a40;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.input-container {
+  position: relative;
+}
+
+.input-container i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  outline: none;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0d6efd;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  text-decoration: none;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  color: #0d6efd;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .image-section {
+    height: 200px;
+    width: 100%;
+  }
+
+  .form-section {
+    width: 100%;
+  }
+}
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  width: 50%;
+  padding: 40px;
+  animation: fadeSlideUp 0.8s ease forwards;
+}
+
+
+.form-group {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.6s ease forwards;
+}
+
+
+.form-group:nth-child(1) { animation-delay: 0.2s; }
+.form-group:nth-child(2) { animation-delay: 0.4s; }
+.form-group:nth-child(3) { animation-delay: 0.6s; }
+
+button {
+  animation: fadeSlideUp 0.8s ease forwards;
+  animation-delay: 0.8s;
+  opacity: 0;
+}

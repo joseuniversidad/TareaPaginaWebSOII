@@ -1,0 +1,133 @@
+
+body {
+  overflow-x: hidden;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: black;
+}
+
+section,
+.section {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 5rem 0;
+}
+
+
+.container-fluid {
+  width: 100%;
+  padding: 0;
+  margin: 0 auto;
+}
+
+
+.horiz-gallery-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.horiz-gallery-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+  gap: 2rem; 
+  padding-right: 2rem; 
+}
+
+
+.project-wrap {
+  position: relative;
+  flex: 0 0 500px; 
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.project-wrap img {
+  width: 100%;
+  height: 600px; 
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.project-wrap:hover img {
+  transform: scale(1.05); 
+}
+
+
+.project-wrap .overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.project-wrap .overlay small {
+  display: block;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+
+.project-wrap a {
+  text-decoration: none;
+  color: white;
+  display: block;
+  height: 100%;
+}
+
+
+.project-wrap:last-child {
+  margin-right: 2rem; 
+}
+
+
+@media (max-width: 1200px) {
+  .project-wrap {
+    flex: 0 0 400px;
+    height: auto;
+  }
+  .project-wrap img {
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-wrap {
+    flex: 0 0 300px;
+  }
+  .project-wrap img {
+    height: 400px;
+  }
+  .project-wrap .overlay {
+    font-size: 20px;
+    padding: 15px;
+  }
+  .project-wrap .overlay small {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-wrap {
+    flex: 0 0 250px;
+  }
+  .project-wrap img {
+    height: 350px;
+  }
+  .project-wrap .overlay {
+    font-size: 18px;
+    padding: 10px;
+  }
+  .project-wrap .overlay small {
+    font-size: 12px;
+  }
+}
