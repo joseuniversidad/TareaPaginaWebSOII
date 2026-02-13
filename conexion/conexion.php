@@ -1,12 +1,13 @@
 <?php
-$host = "localhost";
-$usuario = "root";
-$password = "Cayetano7209$";
-$bd = "servidores_db";
+$host = $_ENV['MYSQLHOST'];
+$user = $_ENV['MYSQLUSER'];
+$pass = $_ENV['MYSQLPASSWORD'];
+$db   = $_ENV['MYSQLDATABASE'];
+$port = $_ENV['MYSQLPORT'];
 
-$conexion = new mysqli($host, $usuario, $password, $bd);
+$conn = new mysqli($host, $user, $pass, $db, $port);
 
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
 }
 ?>
