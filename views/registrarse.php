@@ -25,7 +25,7 @@
         <!-- LADO DERECHO -->
         <div class="auth-form white">
 
-            <form action="../modulos/registro.php" method="POST">
+            <form action="/modulos/registro.php" method="POST">
                 <h2>Crear tu cuenta</h2>
 
                 <label>Nombres</label>

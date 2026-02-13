@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'error',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location = '../views/registrarse.php';
+                window.location = '/views/registrarse.php';
             });
         </script>";
         exit();
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'error',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location = '../views/registrarse.php';
+                window.location = '/views/registrarse.php';
             });
         </script>";
         exit();
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'error',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location = '../views/registrarse.php';
+                window.location = '/views/registrarse.php';
             });
         </script>";
         exit();
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'success',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location = '../views/login.php';
+                window.location = '/views/login.php';
             });
         </script>";
     } else {
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             icon: 'error',
             confirmButtonColor: '#1e90ff'
         }).then(() => {
-            window.location = '../views/registrarse.php';
+            window.location = '/views/registrarse.php';
         });
     </script>";
     }

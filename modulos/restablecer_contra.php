@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 text: 'Nombre inválido. Solo letras y mínimo 3 caracteres.',
                 icon: 'error'
             }).then(() => {
-                window.location.href='../views/restablecer_contra.php';
+                window.location.href='/views/restablecer_contra.php';
             });
         </script>";
         exit;
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 text: 'Correo electrónico inválido.',
                 icon: 'error'
             }).then(() => {
-                window.location.href='../views/restablecer_contra.php';
+                window.location.href='/views/restablecer_contra.php';
             });
         </script>";
         exit;
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 text: 'La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.',
                 icon: 'error'
             }).then(() => {
-                window.location.href='../views/restablecer_contra.php';
+                window.location.href='/views/restablecer_contra.php';
             });
         </script>";
         exit;
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'success',
                 confirmButtonColor: '#3085d6'
             }).then(() => {
-                window.location.href='../views/login.php';
+                window.location.href='/views/login.php';
             });
         </script>";
     } else {
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 icon: 'error',
                 confirmButtonColor: '#d33'
             }).then(() => {
-                window.location.href='../views/restablecer_contra.php';
+                window.location.href='/views/restablecer_contra.php';
             });
         </script>";
     }

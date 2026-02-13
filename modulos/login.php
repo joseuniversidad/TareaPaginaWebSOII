@@ -35,7 +35,7 @@ $resultado = $stmt->get_result();
                 icon: 'success',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location.href = '../views/servidores.php';
+                window.location.href = '/views/servidores.php';
             });
         </script>";
         } else {
@@ -47,7 +47,7 @@ $resultado = $stmt->get_result();
                 icon: 'error',
                 confirmButtonColor: '#1e90ff'
             }).then(() => {
-                window.location.href = '../views/login.php';
+                window.location.href = '/views/login.php';
             });
         </script>";
         }
@@ -60,7 +60,7 @@ $resultado = $stmt->get_result();
             icon: 'error',
             confirmButtonColor: '#1e90ff'
         }).then(() => {
-            window.location.href = '../views/login.php';
+            window.location.href = '/views/login.php';
         });
     </script>";
     }
