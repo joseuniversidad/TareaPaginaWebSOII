@@ -42,7 +42,7 @@ if ($usuario) {
             text: '" . $usuario['nombre'] . "',
             icon: 'success'
         }).then(() => {
-            window.location.href = '/views/servidores.php';
+            window.location.href = '../views/servidores.php';
         });
         </script>";
 
