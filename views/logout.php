@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-// Destruir todas las variables de sesión
 $_SESSION = array();
 
-// Si se usa cookie de sesión, destruirla también
+
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000,
@@ -13,10 +12,7 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Destruir la sesión
 session_destroy();
-
-// Redirigir al login u otra página
-header("Location: ../login.php");
+header("Location: index.php");
 exit();
 ?>
