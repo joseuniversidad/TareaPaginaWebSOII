@@ -1,87 +1,134 @@
 <?php
 ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../conexion/conexion.php';
+include "../conexion/conexion.php"; // Esto define $conn
 ?>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Restablecer Contraseña</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+<body>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $nombres   = trim($_POST['nombres'] ?? '');
-    $apellidos = trim($_POST['apellidos'] ?? '');
-    $correo    = trim($_POST['correo'] ?? '');
-    $password  = $_POST['contrasenia'] ?? '';
-    $confirmar = $_POST['confirmar'] ?? '';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Validación campos vacíos
-    if (empty($nombres) || empty($apellidos) || empty($correo) || empty($password) || empty($confirmar)) {
-        alerta("Error", "Todos los campos son obligatorios", "error", "../views/registrarse.php");
-        exit();
+    $nombre = trim($_POST['nombre'] ?? '');
+    $correo = trim($_POST['correo'] ?? '');
+    $password_plana = $_POST['nueva_password'] ?? '';
+
+    // Validaciones
+    if (!preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{3,50}$/", $nombre)) {
+        echo "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Nombre inválido. Solo letras y mínimo 3 caracteres.',
+                icon: 'error'
+            }).then(() => {
+                window.location.href='/views/restablecer_contra.php';
+            });
+        </script>";
+        exit;
     }
 
-    // Validación contraseñas
-    if ($password !== $confirmar) {
-        alerta("Error", "Las contraseñas no coinciden", "error", "../views/registrarse.php");
-        exit();
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Correo electrónico inválido.',
+                icon: 'error'
+            }).then(() => {
+                window.location.href='/views/restablecer_contra.php';
+            });
+        </script>";
+        exit;
     }
+
+    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password_plana)) {
+        echo "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.',
+                icon: 'error'
+            }).then(() => {
+                window.location.href='/views/restablecer_contra.php';
+            });
+        </script>";
+        exit;
+    }
+
+    $nueva_password = password_hash($password_plana, PASSWORD_DEFAULT);
 
     try {
+        // Buscar usuario
+        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE nombre = :nombre AND correo = :correo");
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->execute();
+        $usuario = $stmt->fetch();
 
-        // Verificar si el correo ya existe
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
-        $stmt->execute([$correo]);
+        if ($usuario) {
+            // Actualizar contraseña
+            $update = $conn->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE nombre = :nombre AND correo = :correo");
+            $update->bindParam(':contrasenia', $nueva_password);
+            $update->bindParam(':nombre', $nombre);
+            $update->bindParam(':correo', $correo);
+            $update->execute();
 
-        if ($stmt->fetch()) {
-            alerta("Error", "El correo ya está registrado", "error", "../views/registrarse.php");
-            exit();
+            echo "<script>
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Contraseña restablecida correctamente',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    window.location.href='/views/login.php';
+                });
+            </script>";
+
+        } else {
+            echo "<script>
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Los datos no coinciden con ningún usuario.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                }).then(() => {
+                    window.location.href='/views/restablecer_contra.php';
+                });
+            </script>";
         }
 
-        // Encriptar contraseña
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insertar usuario
-        $stmt = $conn->prepare(
-            "INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)"
-        );
-
-        $stmt->execute([$nombres, $apellidos, $correo, $password_hash]);
-
-        alerta("Éxito", "Usuario registrado correctamente", "success", "../views/login.php");
     } catch (PDOException $e) {
-        alerta("Error BD", "Error en la base de datos: " . $e->getMessage(), "error", "../views/registrarse.php");
+        echo "<script>
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error en la base de datos: ".addslashes($e->getMessage())."',
+                icon: 'error'
+            }).then(() => {
+                window.location.href='/views/restablecer_contra.php';
+            });
+        </script>";
     }
-}
 
-function alerta($titulo, $mensaje, $icono, $redireccion)
-{
-    echo "
-    <html>
-    <head>
-        <meta charset='UTF-8'>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-    </head>
-    <body>
-    <script>
+} else {
+    echo "<script>
         Swal.fire({
-            title: '$titulo',
-            text: '$mensaje',
-            icon: '$icono',
-            confirmButtonText: 'Aceptar'
+            title: 'Acceso no permitido',
+            text: 'Debes enviar el formulario correctamente.',
+            icon: 'warning'
         }).then(() => {
-            window.location.href = '$redireccion';
+            window.location.href='../views/restablecer_contra.php';
         });
-    </script>
-    </body>
-    </html>
-    ";
+    </script>";
 }
 ?>
+
+</body>
+</html>
