@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollSmoother.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </head>
 
@@ -66,14 +68,24 @@
                                     <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Según Hardware">
                                 </a>
                             </div>
-                    </div>
+                        </div>
 
-                </div>
+                    </div>
             </section>
 
             <section class="panel plain">
                 <h3 style="color: white;">Dale Click para explorar las Clases de Servidores!</h3>
             </section>
+
+            <section class="panel plain" style="text-align:center; margin: 40px 0;">
+                <form action="logout.php" method="post">
+                    <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #e74c3c; color: white; border: none; border-radius: 5px;">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </section>
+
+
 
         </div>
     </div>
@@ -107,5 +119,6 @@
         });
     });
 </script>
+
 
 </html>

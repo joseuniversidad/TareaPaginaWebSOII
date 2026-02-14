@@ -52,7 +52,7 @@
                 <label>Contraseña</label>
                 <input type="password" name="contrasenia" required required autocomplete="new-password"
                     pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
-                <small>Mínimo 8 caracteres, incluir una letra Mayuscula y un número.</small>
+                <small>Mínimo 8 caracteres, incluir una letra Mayuscula y un número, NO SIMBOLOS.</small>
 
                 <label>Confirmar contraseña</label>
                 <input type="password" name="confirmar" required  autocomplete="new-password">

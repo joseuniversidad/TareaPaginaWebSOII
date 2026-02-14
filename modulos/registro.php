@@ -2,14 +2,6 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-/*
-|--------------------------------------------------------------------------
-| CONEXIÓN (ruta corregida)
-|--------------------------------------------------------------------------
-| registro.php está en /app/modulos/
-| conexion.php está en /app/conexion/
-| Por eso usamos ../ para subir un nivel
-*/
 require_once __DIR__ . '/../conexion/conexion.php';
 ?>
 
