@@ -1,9 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-include "../conexion/conexion.php"; // Esto define $conn
+session_start();
+include "../conexion/conexion.php"; // define $conn
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +13,6 @@ include "../conexion/conexion.php"; // Esto define $conn
 <body>
 
 <?php
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nombre = trim($_POST['nombre'] ?? '');
@@ -25,41 +21,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validaciones
     if (!preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{3,50}$/", $nombre)) {
-        echo "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Nombre inválido. Solo letras y mínimo 3 caracteres.',
-                icon: 'error'
-            }).then(() => {
-                window.location.href='/views/restablecer_contra.php';
-            });
-        </script>";
+        $mensaje = "Nombre inválido. Solo letras y mínimo 3 caracteres.";
+        $tipo = "error";
+        mostrar_alerta($mensaje, $tipo);
         exit;
     }
 
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Correo electrónico inválido.',
-                icon: 'error'
-            }).then(() => {
-                window.location.href='/views/restablecer_contra.php';
-            });
-        </script>";
+        $mensaje = "Correo electrónico inválido.";
+        $tipo = "error";
+        mostrar_alerta($mensaje, $tipo);
         exit;
     }
 
     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password_plana)) {
-        echo "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.',
-                icon: 'error'
-            }).then(() => {
-                window.location.href='/views/restablecer_contra.php';
-            });
-        </script>";
+        $mensaje = "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
+        $tipo = "error";
+        mostrar_alerta($mensaje, $tipo);
         exit;
     }
 
@@ -81,50 +59,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $update->bindParam(':correo', $correo);
             $update->execute();
 
-            echo "<script>
-                Swal.fire({
-                    title: 'Éxito',
-                    text: 'Contraseña restablecida correctamente',
-                    icon: 'success',
-                    confirmButtonColor: '#3085d6'
-                }).then(() => {
-                    window.location.href='/views/login.php';
-                });
-            </script>";
-
+            mostrar_alerta("Contraseña restablecida correctamente", "success", "/views/login.php");
+            exit;
         } else {
-            echo "<script>
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Los datos no coinciden con ningún usuario.',
-                    icon: 'error',
-                    confirmButtonColor: '#d33'
-                }).then(() => {
-                    window.location.href='/views/restablecer_contra.php';
-                });
-            </script>";
+            mostrar_alerta("Los datos no coinciden con ningún usuario.", "error", "/views/restablecer_contra.php");
+            exit;
         }
 
     } catch (PDOException $e) {
-        echo "<script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Ocurrió un error en la base de datos: ".addslashes($e->getMessage())."',
-                icon: 'error'
-            }).then(() => {
-                window.location.href='/views/restablecer_contra.php';
-            });
-        </script>";
+        mostrar_alerta("Ocurrió un error en la base de datos: ".addslashes($e->getMessage()), "error", "/views/restablecer_contra.php");
+        exit;
     }
 
 } else {
+    mostrar_alerta("Debes enviar el formulario correctamente.", "warning", "/views/restablecer_contra.php");
+    exit;
+}
+
+// Función para mostrar SweetAlert
+function mostrar_alerta($mensaje, $tipo = "info", $redirect = null) {
+    $redirect_js = $redirect ? "window.location.href='{$redirect}';" : "";
     echo "<script>
         Swal.fire({
-            title: 'Acceso no permitido',
-            text: 'Debes enviar el formulario correctamente.',
-            icon: 'warning'
+            title: '".ucfirst($tipo)."',
+            text: '{$mensaje}',
+            icon: '{$tipo}',
+            confirmButtonColor: '#3085d6'
         }).then(() => {
-            window.location.href='../views/restablecer_contra.php';
+            {$redirect_js}
         });
     </script>";
 }
