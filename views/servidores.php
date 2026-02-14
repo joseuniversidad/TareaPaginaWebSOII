@@ -75,9 +75,7 @@
 
             <section class="panel plain">
                 <h3 style="color: white;">Dale Click para explorar las Clases de Servidores!</h3>
-            </section>
-
-            <section class="panel plain" style="text-align:center; margin: 40px 0;">
+                <br>
                 <form action="logout.php" method="post">
                     <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #e74c3c; color: white; border: none; border-radius: 5px;">
                         Cerrar Sesión
@@ -85,6 +83,7 @@
                 </form>
             </section>
 
+           
 
 
         </div>

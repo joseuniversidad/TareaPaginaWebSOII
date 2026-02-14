@@ -13,6 +13,6 @@ if (ini_get("session.use_cookies")) {
 }
 
 session_destroy();
-header("Location: pagina_web/index.php");
+header("index.php");
 exit();
 ?>
