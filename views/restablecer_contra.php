@@ -18,7 +18,7 @@
         <div class="form-section">
             <h2>🔐 Restablecer Contraseña</h2>
 
-            <form action="/modulos/restablecer_contra.php" method="POST">
+            <form action="../modulos/restablecer_contra.php" method="POST">
 
                 <div class="form-group">
                     <label>Nombres</label>

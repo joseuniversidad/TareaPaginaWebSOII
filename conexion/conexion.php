@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 $host = "centerbeam.proxy.rlwy.net";
 $db   = "railway";
 $user = "root";
@@ -16,8 +13,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false
     ]);
-
-    echo "Conexión exitosa 🚀";
 
 } catch (PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
