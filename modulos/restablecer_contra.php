@@ -1,23 +1,17 @@
 <?php
-include "../conexion/conexion.php";
+include "../conexion/conexion.php"; // Esto define $conn
+
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <title>Restablecer contraseña</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-</body>
-
-</html>
-
 <?php
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -25,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = trim($_POST['correo'] ?? '');
     $password_plana = $_POST['nueva_password'] ?? '';
 
+    // Validaciones
     if (!preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{3,50}$/", $nombre)) {
         echo "<script>
             Swal.fire({
@@ -51,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    
     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password_plana)) {
         echo "<script>
             Swal.fire({
@@ -65,43 +59,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    // Hashear la nueva contraseña
     $nueva_password = password_hash($password_plana, PASSWORD_DEFAULT);
-    $stmt = $conexion->prepare("SELECT id FROM usuarios WHERE nombre = ? AND correo = ?");
-    $stmt->bind_param("ss", $nombre, $correo);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
 
-    if ($resultado->num_rows > 0) {
+    try {
+        // Buscar usuario
+        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE nombre = :nombre AND correo = :correo");
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->execute();
+        $usuario = $stmt->fetch();
 
-        $update = $conexion->prepare("UPDATE usuarios SET contrasenia = ? WHERE nombre = ? AND correo = ?");
-        $update->bind_param("sss", $nueva_password, $nombre, $correo);
-        $update->execute();
+        if ($usuario) {
+            // Actualizar contraseña
+            $update = $conn->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE nombre = :nombre AND correo = :correo");
+            $update->bindParam(':contrasenia', $nueva_password);
+            $update->bindParam(':nombre', $nombre);
+            $update->bindParam(':correo', $correo);
+            $update->execute();
 
-        echo "<script>
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Contraseña restablecida correctamente',
-                icon: 'success',
-                confirmButtonColor: '#3085d6'
-            }).then(() => {
-                window.location.href='/views/login.php';
-            });
-        </script>";
-    } else {
+            echo "<script>
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Contraseña restablecida correctamente',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    window.location.href='/views/login.php';
+                });
+            </script>";
 
+        } else {
+            echo "<script>
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Los datos no coinciden con ningún usuario.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                }).then(() => {
+                    window.location.href='/views/restablecer_contra.php';
+                });
+            </script>";
+        }
+
+    } catch (PDOException $e) {
         echo "<script>
             Swal.fire({
                 title: 'Error',
-                text: 'Los datos no coinciden con ningún usuario.',
-                icon: 'error',
-                confirmButtonColor: '#d33'
+                text: 'Ocurrió un error en la base de datos: {$e->getMessage()}',
+                icon: 'error'
             }).then(() => {
                 window.location.href='/views/restablecer_contra.php';
             });
         </script>";
     }
-} else {
 
+} else {
+    // Acceso directo sin POST
     echo "<script>
         Swal.fire({
             title: 'Acceso no permitido',
