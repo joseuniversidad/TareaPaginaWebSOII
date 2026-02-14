@@ -60,7 +60,6 @@ session_destroy();
     </style>
 
     <script>
-        // Redirige después de 2 segundos
         setTimeout(function() {
             window.location.href = "index.php";
         }, 2000);

@@ -1,96 +1,88 @@
 <?php
-session_start();
-include "../conexion/conexion.php"; // define $conn
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
+require_once __DIR__ . '/../conexion/conexion.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
+
 <head>
     <meta charset="UTF-8">
-    <title>Restablecer Contraseña</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $nombre = trim($_POST['nombre'] ?? '');
-    $correo = trim($_POST['correo'] ?? '');
-    $password_plana = $_POST['nueva_password'] ?? '';
+    $nombres   = trim($_POST['nombres'] ?? '');
+    $apellidos = trim($_POST['apellidos'] ?? '');
+    $correo    = trim($_POST['correo'] ?? '');
+    $password  = $_POST['contrasenia'] ?? '';
+    $confirmar = $_POST['confirmar'] ?? '';
 
-    // Validaciones
-    if (!preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{3,50}$/", $nombre)) {
-        $mensaje = "Nombre inválido. Solo letras y mínimo 3 caracteres.";
-        $tipo = "error";
-        mostrar_alerta($mensaje, $tipo);
-        exit;
+    // Validación campos vacíos
+    if (empty($nombres) || empty($apellidos) || empty($correo) || empty($password) || empty($confirmar)) {
+        alerta("Error", "Todos los campos son obligatorios", "error", "../views/registrarse.php");
+        exit();
     }
 
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        $mensaje = "Correo electrónico inválido.";
-        $tipo = "error";
-        mostrar_alerta($mensaje, $tipo);
-        exit;
+    // Validación contraseñas
+    if ($password !== $confirmar) {
+        alerta("Error", "Las contraseñas no coinciden", "error", "../views/registrarse.php");
+        exit();
     }
-
-    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password_plana)) {
-        $mensaje = "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
-        $tipo = "error";
-        mostrar_alerta($mensaje, $tipo);
-        exit;
-    }
-
-    $nueva_password = password_hash($password_plana, PASSWORD_DEFAULT);
 
     try {
-        // Buscar usuario
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE nombre = :nombre AND correo = :correo");
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':correo', $correo);
-        $stmt->execute();
-        $usuario = $stmt->fetch();
 
-        if ($usuario) {
-            // Actualizar contraseña
-            $update = $conn->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE nombre = :nombre AND correo = :correo");
-            $update->bindParam(':contrasenia', $nueva_password);
-            $update->bindParam(':nombre', $nombre);
-            $update->bindParam(':correo', $correo);
-            $update->execute();
+        // Verificar si el correo ya existe
+        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
+        $stmt->execute([$correo]);
 
-            mostrar_alerta("Contraseña restablecida correctamente", "success", "/views/login.php");
-            exit;
-        } else {
-            mostrar_alerta("Los datos no coinciden con ningún usuario.", "error", "/views/restablecer_contra.php");
-            exit;
+        if ($stmt->fetch()) {
+            alerta("Error", "El correo ya está registrado", "error", "../views/registrarse.php");
+            exit();
         }
 
-    } catch (PDOException $e) {
-        mostrar_alerta("Ocurrió un error en la base de datos: ".addslashes($e->getMessage()), "error", "/views/restablecer_contra.php");
-        exit;
-    }
+        // Encriptar contraseña
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-} else {
-    mostrar_alerta("Debes enviar el formulario correctamente.", "warning", "/views/restablecer_contra.php");
-    exit;
+        // Insertar usuario
+        $stmt = $conn->prepare(
+            "INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)"
+        );
+
+        $stmt->execute([$nombres, $apellidos, $correo, $password_hash]);
+
+        alerta("Éxito", "Usuario registrado correctamente", "success", "../views/login.php");
+    } catch (PDOException $e) {
+        alerta("Error BD", "Error en la base de datos: " . $e->getMessage(), "error", "../views/registrarse.php");
+    }
 }
 
-// Función para mostrar SweetAlert
-function mostrar_alerta($mensaje, $tipo = "info", $redirect = null) {
-    $redirect_js = $redirect ? "window.location.href='{$redirect}';" : "";
-    echo "<script>
+function alerta($titulo, $mensaje, $icono, $redireccion)
+{
+    echo "
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
         Swal.fire({
-            title: '".ucfirst($tipo)."',
-            text: '{$mensaje}',
-            icon: '{$tipo}',
-            confirmButtonColor: '#3085d6'
+            title: '$titulo',
+            text: '$mensaje',
+            icon: '$icono',
+            confirmButtonText: 'Aceptar'
         }).then(() => {
-            {$redirect_js}
+            window.location.href = '$redireccion';
         });
-    </script>";
+    </script>
+    </body>
+    </html>
+    ";
 }
 ?>
-
-</body>
-</html>

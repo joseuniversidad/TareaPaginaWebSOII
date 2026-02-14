@@ -1,15 +1,19 @@
 <?php
-include "../conexion/conexion.php"; // Esto define $conn
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
+include "../conexion/conexion.php"; // Esto define $conn
 ?>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Restablecer Contraseña</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+<body>
 
 <?php
 
@@ -59,7 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Hashear la nueva contraseña
     $nueva_password = password_hash($password_plana, PASSWORD_DEFAULT);
 
     try {
@@ -106,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>
             Swal.fire({
                 title: 'Error',
-                text: 'Ocurrió un error en la base de datos: {$e->getMessage()}',
+                text: 'Ocurrió un error en la base de datos: ".addslashes($e->getMessage())."',
                 icon: 'error'
             }).then(() => {
                 window.location.href='/views/restablecer_contra.php';
@@ -115,7 +118,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 } else {
-    // Acceso directo sin POST
     echo "<script>
         Swal.fire({
             title: 'Acceso no permitido',
@@ -127,3 +129,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>";
 }
 ?>
+
+</body>
+</html>
