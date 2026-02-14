@@ -61,7 +61,7 @@
 
     <div class="actions">
         <a href="../views/servidores.php" class="btn btn-menu">Menú principal</a>
-        <a href="../views/logout.php" class="btn btn-logout">Cerrar sesión</a>
+        <a href="../logout.php" class="btn btn-logout">Cerrar sesión</a>
     </div>
 
 </nav>
