@@ -127,6 +127,73 @@
                 text-align: center;
             }
         }
+
+        /* =========================
+   MODO MOVIL PANEL FLOTANTE
+========================= */
+        @media (max-width:900px) {
+
+            nav {
+                position: relative;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .menu ul {
+                flex-direction: column;
+            }
+
+            .menu ul li {
+                position: relative;
+                width: 100%;
+            }
+
+            .menu ul li a {
+                padding: 16px;
+                width: 100%;
+                display: block;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            /* PANEL FLOTANTE */
+            .menu ul li ul {
+                position: absolute;
+                left: 10px;
+                right: 10px;
+                top: 55px;
+                background: #1c1f26;
+                border-radius: 14px;
+                padding: 8px 0;
+                display: none;
+                flex-direction: column;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+                z-index: 999;
+                animation: fadeIn .2s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px)
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0)
+                }
+            }
+
+            .menu ul li ul li a {
+                padding: 14px 18px;
+                border: none;
+                font-size: 15px;
+            }
+
+            /* CUANDO ESTA ABIERTO */
+            .menu ul li.open ul {
+                display: flex;
+            }
+        }
     </style>
 </head>
 
@@ -200,31 +267,42 @@
     </nav>
 
     <script>
-        /* DROPDOWN INTELIGENTE MOBILE */
-        const links = document.querySelectorAll(".menu ul li > a");
+        /* DROPDOWN FLOTANTE SOLO EN MOVIL */
+        const menuLinks = document.querySelectorAll(".menu ul li > a");
 
-        links.forEach(link => {
+        menuLinks.forEach(link => {
             link.addEventListener("click", function(e) {
 
-                if (window.innerWidth < 900) {
+                if (window.innerWidth <= 900) {
 
                     const parent = this.parentElement;
-                    const isOpen = parent.classList.contains("open");
+                    const alreadyOpen = parent.classList.contains("open");
 
                     // cerrar todos
                     document.querySelectorAll(".menu ul li").forEach(li => {
                         li.classList.remove("open");
                     });
 
-                    // si estaba cerrado → abrir y bloquear navegación
-                    if (!isOpen) {
+                    // si estaba cerrado → abrir
+                    if (!alreadyOpen) {
                         parent.classList.add("open");
                         e.preventDefault();
                     }
-                    // si estaba abierto → deja navegar normal
+                    // si estaba abierto → se cierra solo
                 }
 
             });
+        });
+
+        /* cerrar si tocan fuera del panel */
+        document.addEventListener("click", function(e) {
+            if (window.innerWidth <= 900) {
+                if (!e.target.closest(".menu")) {
+                    document.querySelectorAll(".menu ul li").forEach(li => {
+                        li.classList.remove("open");
+                    });
+                }
+            }
         });
     </script>
 
