@@ -15,7 +15,7 @@
             <h1><i class="fa-solid fa-server"></i> Infraestructura</h1>
             <p>Accede al panel de gestión y monitoreo de servidores</p>
 
-            <form action="..modulos/login.php" method="POST">
+            <form action="../modulos/login.php" method="POST">
 
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
