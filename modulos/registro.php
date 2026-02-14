@@ -2,8 +2,17 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/conexion/conexion.php';
+/*
+|--------------------------------------------------------------------------
+| CONEXIÓN (ruta corregida)
+|--------------------------------------------------------------------------
+| registro.php está en /app/modulos/
+| conexion.php está en /app/conexion/
+| Por eso usamos ../ para subir un nivel
+*/
+require_once __DIR__ . '/../conexion/conexion.php';
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -13,7 +22,7 @@ require_once __DIR__ . '/conexion/conexion.php';
 </head>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $nombres   = trim($_POST['nombres'] ?? '');
     $apellidos = trim($_POST['apellidos'] ?? '');
@@ -21,34 +30,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password  = $_POST['contrasenia'] ?? '';
     $confirmar = $_POST['confirmar'] ?? '';
 
+    // Validación campos vacíos
     if (empty($nombres) || empty($apellidos) || empty($correo) || empty($password) || empty($confirmar)) {
         alerta("Error", "Todos los campos son obligatorios", "error", "../views/registrarse.php");
         exit();
     }
 
+    // Validación contraseñas
     if ($password !== $confirmar) {
         alerta("Error", "Las contraseñas no coinciden", "error", "../views/registrarse.php");
         exit();
     }
 
-    // Verificar si correo ya existe
-    $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
-    $stmt->execute([$correo]);
+    try {
 
-    if ($stmt->fetch()) {
-        alerta("Error", "El correo ya está registrado", "error", "../views/registrarse.php");
-        exit();
+        // Verificar si el correo ya existe
+        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
+        $stmt->execute([$correo]);
+
+        if ($stmt->fetch()) {
+            alerta("Error", "El correo ya está registrado", "error", "../views/registrarse.php");
+            exit();
+        }
+
+        // Encriptar contraseña
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insertar usuario
+        $stmt = $conn->prepare(
+            "INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)"
+        );
+
+        $stmt->execute([$nombres, $apellidos, $correo, $password_hash]);
+
+        alerta("Éxito", "Usuario registrado correctamente", "success", "../views/login.php");
+    } catch (PDOException $e) {
+        alerta("Error BD", "Error en la base de datos: " . $e->getMessage(), "error", "../views/registrarse.php");
     }
-
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $conn->prepare(
-        "INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)"
-    );
-
-    $stmt->execute([$nombres, $apellidos, $correo, $password_hash]);
-
-    alerta("Éxito", "Usuario registrado correctamente", "success", "../views/login.php");
 }
 
 function alerta($titulo, $mensaje, $icono, $redireccion)
@@ -56,6 +74,7 @@ function alerta($titulo, $mensaje, $icono, $redireccion)
     echo "
     <html>
     <head>
+        <meta charset='UTF-8'>
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     </head>
     <body>
@@ -63,7 +82,8 @@ function alerta($titulo, $mensaje, $icono, $redireccion)
         Swal.fire({
             title: '$titulo',
             text: '$mensaje',
-            icon: '$icono'
+            icon: '$icono',
+            confirmButtonText: 'Aceptar'
         }).then(() => {
             window.location.href = '$redireccion';
         });
