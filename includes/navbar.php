@@ -28,7 +28,7 @@
             font-weight: bold;
         }
 
-        /* MENU NORMAL (PC) */
+        /* PC */
         .menu ul {
             list-style: none;
             display: flex;
@@ -67,9 +67,7 @@
             text-decoration: none;
         }
 
-        /* =========================
-   CELULAR → VERTICAL
-========================= */
+        /* CELULAR / TABLET */
         @media (max-width:900px) {
 
             nav {
@@ -81,10 +79,6 @@
                 text-align: center;
                 padding: 12px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .menu {
-                width: 100%;
             }
 
             .menu ul {
@@ -102,7 +96,7 @@
                 width: 100%;
             }
 
-            /* SUBMENUS ESTILO PANEL */
+            /* dropdown vertical */
             .menu ul li ul {
                 position: static;
                 display: none;
@@ -206,14 +200,30 @@
     </nav>
 
     <script>
-        /* SOLO PARA ABRIR SUBMENUS EN CELULAR */
-        document.querySelectorAll(".menu ul li > a").forEach(link => {
+        /* DROPDOWN INTELIGENTE MOBILE */
+        const links = document.querySelectorAll(".menu ul li > a");
+
+        links.forEach(link => {
             link.addEventListener("click", function(e) {
+
                 if (window.innerWidth < 900) {
+
                     const parent = this.parentElement;
-                    parent.classList.toggle("open");
-                    e.preventDefault();
+                    const isOpen = parent.classList.contains("open");
+
+                    // cerrar todos
+                    document.querySelectorAll(".menu ul li").forEach(li => {
+                        li.classList.remove("open");
+                    });
+
+                    // si estaba cerrado → abrir y bloquear navegación
+                    if (!isOpen) {
+                        parent.classList.add("open");
+                        e.preventDefault();
+                    }
+                    // si estaba abierto → deja navegar normal
                 }
+
             });
         });
     </script>
