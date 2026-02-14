@@ -1,11 +1,15 @@
 <?php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 session_start();
-include "../conexion/conexion.php";
+
+include __DIR__ . "/../conexion/conexion.php";
 
 $correo = $_POST['correo'];
 $contrasenia = $_POST['contrasenia'];
 
-$stmt = $conexion->prepare("SELECT * FROM usuarios WHERE correo = ?");
+$stmt = $conn->prepare("SELECT * FROM usuarios WHERE correo = ?");
 $stmt->bind_param("s", $correo);
 $stmt->execute();
 $resultado = $stmt->get_result();

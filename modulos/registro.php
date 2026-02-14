@@ -1,6 +1,8 @@
 <?php
-include "../conexion/conexion.php";
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
+require_once __DIR__ . '/conexion/conexion.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,8 +12,7 @@ include "../conexion/conexion.php";
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-    <?php
+<?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nombres   = trim($_POST['nombres'] ?? '');
@@ -20,97 +21,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password  = $_POST['contrasenia'] ?? '';
     $confirmar = $_POST['confirmar'] ?? '';
 
-
     if (empty($nombres) || empty($apellidos) || empty($correo) || empty($password) || empty($confirmar)) {
-        echo "
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Todos los campos son obligatorios',
-                icon: 'error',
-                confirmButtonColor: '#1e90ff'
-            }).then(() => {
-                window.location = '/views/registrarse.php';
-            });
-        </script>";
+        alerta("Error", "Todos los campos son obligatorios", "error", "../views/registrarse.php");
         exit();
     }
 
     if ($password !== $confirmar) {
-        echo "
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-                confirmButtonColor: '#1e90ff'
-            }).then(() => {
-                window.location = '/views/registrarse.php';
-            });
-        </script>";
+        alerta("Error", "Las contraseñas no coinciden", "error", "../views/registrarse.php");
         exit();
     }
 
+    // Verificar si correo ya existe
+    $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
+    $stmt->execute([$correo]);
 
-    $stmt = $conexion->prepare("SELECT id FROM usuarios WHERE correo = ?");
-    $stmt->bind_param("s", $correo);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-        echo "
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-            Swal.fire({
-                title: 'Error',
-                text: 'El correo ya está registrado',
-                icon: 'error',
-                confirmButtonColor: '#1e90ff'
-            }).then(() => {
-                window.location = '/views/registrarse.php';
-            });
-        </script>";
+    if ($stmt->fetch()) {
+        alerta("Error", "El correo ya está registrado", "error", "../views/registrarse.php");
         exit();
     }
 
- 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
+    $stmt = $conn->prepare(
+        "INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)"
+    );
 
-    $stmt = $conexion->prepare("INSERT INTO usuarios (nombre, apellidos, correo, contrasenia) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nombres, $apellidos, $correo, $password_hash);
+    $stmt->execute([$nombres, $apellidos, $correo, $password_hash]);
 
-    if ($stmt->execute()) {
-        echo "
+    alerta("Éxito", "Usuario registrado correctamente", "success", "../views/login.php");
+}
+
+function alerta($titulo, $mensaje, $icono, $redireccion)
+{
+    echo "
+    <html>
+    <head>
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Usuario registrado correctamente',
-                icon: 'success',
-                confirmButtonColor: '#1e90ff'
-            }).then(() => {
-                window.location = '/views/login.php';
-            });
-        </script>";
-    } else {
-        echo "
-    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
     <script>
         Swal.fire({
-            title: 'Error en MySQL',
-            text: '" . $stmt->error . "',
-            icon: 'error',
-            confirmButtonColor: '#1e90ff'
+            title: '$titulo',
+            text: '$mensaje',
+            icon: '$icono'
         }).then(() => {
-            window.location = '/views/registrarse.php';
+            window.location.href = '$redireccion';
         });
-    </script>";
-    }
-
-
-    $stmt->close();
-    $conexion->close();
+    </script>
+    </body>
+    </html>
+    ";
 }
+?>
