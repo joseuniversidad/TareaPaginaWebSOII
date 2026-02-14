@@ -1,3 +1,123 @@
+
+<style>
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #111;
+    color: white;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* ======== MENU PRINCIPAL ======== */
+.menu ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+.menu ul li {
+    position: relative;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 8px;
+    display: block;
+}
+
+/* Submenu */
+.menu ul li ul {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background: #222;
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    padding: 10px 0;
+}
+
+.menu ul li:hover ul {
+    display: flex;
+}
+
+.menu ul li ul li a {
+    padding: 8px 15px;
+}
+
+/* ======== BOTONES ======== */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: white;
+    background: #007bff;
+    border-radius: 5px;
+}
+
+.btn-logout {
+    background: #dc3545;
+}
+
+/* ========================================= */
+/* 📱 RESPONSIVE PARA CELULAR */
+/* ========================================= */
+@media (max-width: 768px) {
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu {
+        width: 100%;
+    }
+
+    .menu ul {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    .menu ul li {
+        width: 100%;
+    }
+
+    .menu ul li ul {
+        position: static;
+        display: none;
+        background: #1a1a1a;
+        padding-left: 15px;
+    }
+
+    .menu ul li:hover ul {
+        display: block;
+    }
+
+    .actions {
+        width: 100%;
+        margin-top: 10px;
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
 <nav>
     <div class="logo">SERVIDORES</div>
 
